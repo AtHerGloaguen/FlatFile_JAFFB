@@ -2,6 +2,7 @@ package javax.flat.bind.control;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -183,7 +184,9 @@ public class ControleInfo {
 
         }
 
-        if (!instanceObject.getClass().getSuperclass().getName().equals(Object.class.getName())) {
+        if (!instanceObject.getClass().getSuperclass().getName().equals(Object.class.getName())
+                && !Modifier.isAbstract(instanceObject.getClass().getSuperclass().getModifiers())
+                && !Modifier.isInterface(instanceObject.getClass().getSuperclass().getModifiers())) {
 
             try {
                 fdcp = retroFields(((Class<?>) instanceObject.getClass().getSuperclass()).newInstance(), fdcp, numberField);
@@ -241,7 +244,9 @@ public class ControleInfo {
 
         }
 
-        if (!obj.getClass().getSuperclass().getName().equals(Object.class.getName())) {
+        if (!obj.getClass().getSuperclass().getName().equals(Object.class.getName())
+                && !Modifier.isAbstract(obj.getClass().getSuperclass().getModifiers())
+                && !Modifier.isInterface(obj.getClass().getSuperclass().getModifiers())) {
 
             try {
                 declaredMethods = retroMethodes(((Class<?>) obj.getClass().getSuperclass()).newInstance(), declaredMethods, numberMethode);

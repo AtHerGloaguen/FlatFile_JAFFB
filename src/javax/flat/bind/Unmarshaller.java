@@ -170,13 +170,20 @@ public abstract class Unmarshaller extends CommunContext {
 
         Map<Integer, FieldCsv> fDligneRoot = new HashMap<Integer, FieldCsv>();
         Map<String, Method> map = new HashMap<String, Method>();
-        for (Method method : obj.getClass().getDeclaredMethods()) {
+        int numberMethode = 0;
+        Method[] mth = null;
+
+        mth = ControleInfo.retroMethodes(obj, mth, numberMethode);
+        for (Method method : mth) {
 
             map.put(method.getName().toLowerCase(), method);
 
         }
+        int numberField = 0;
+        Field[] fdcp = null;
+        fdcp = ControleInfo.retroFields(obj, fdcp, numberField);
 
-        for (Field field : obj.getClass().getDeclaredFields()) {
+        for (Field field : fdcp) {
             FieldCsv fd = new FieldCsv(field);
             if (fd.getCsvMappingParse() != null) {
                 fDligneRoot.put(fd.getCsvMappingParse().offset(), fd);
