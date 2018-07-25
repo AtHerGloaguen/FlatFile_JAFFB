@@ -1,5 +1,5 @@
 # FlatFile_JAFFB
-flat file Process marshaller unmarshaller
+flat file Process marshaller unmarshaller for the parsing
 
 JAFFB parsing and mapping for the file flat with annotation imitating JAXB
 
