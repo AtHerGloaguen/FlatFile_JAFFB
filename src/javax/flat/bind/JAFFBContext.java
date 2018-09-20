@@ -34,8 +34,18 @@ public abstract class JAFFBContext {
 		return ContextFinder.find(clazz);
 	}
 
+	/**
+	 * deserialize chaine of caractere to Object
+	 * @return
+	 * @throws JFFPBException
+	 */
 	public abstract Unmarshaller createUnmarshaller() throws JFFPBException;
 
+	/**
+	 * Serialize Object to chaine of caractere 
+	 * @return
+	 * @throws JFFPBException
+	 */
 	public abstract Marshaller createMarshaller() throws JFFPBException;
 
 }

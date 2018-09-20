@@ -156,14 +156,29 @@ public class ControleInfo {
 
     public static List<FieldPositional> creatListFieldPositional(Object argobj) throws JFFPBException {
         List<FieldPositional> rtnfdLigneRoot = new ArrayList<FieldPositional>();
-
-        for (Field field : argobj.getClass().getDeclaredFields()) {
+        int numberField = 0;
+        Field[] fdcp = null;
+        fdcp = retroFields(argobj, fdcp, numberField);
+        
+        for (Field field : fdcp ) {
 
             rtnfdLigneRoot.add(new FieldPositional(field));
 
         }
 
         return rtnfdLigneRoot;
+    }
+    
+    
+    public static Field[] retroFields(Class instanceObject, Field[] fdcp, int numberField) {
+        Object obj = null;
+        try {
+            obj = instanceObject.newInstance() ;
+        } catch (Exception e) {
+         
+            e.printStackTrace();
+        }
+        return retroFields( obj,  fdcp, numberField) ;
     }
 
     public static Field[] retroFields(Object instanceObject, Field[] fdcp, int numberField) {

@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Proxy;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,6 +17,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
+import javax.flat.bind.annotation.positinal.PositionalMappingParse;
 import javax.flat.bind.api.FieldCsv;
 import javax.flat.bind.api.FieldPositional;
 import javax.flat.bind.control.ControleInfo;
@@ -92,6 +94,8 @@ public abstract class Unmarshaller extends CommunContext {
 
         }
         Collections.sort(fDligneRoot, COMPARATEUR_RANG_FIELD);
+        // correction de valeur des offset avec laste
+        correctionDeValeurDuAuLast(fDligneRoot, data);
         for (FieldPositional field : fDligneRoot) {
 
             makeInvokeSetMethodes(obj, field, map.get(field.getNamSetMethode().toLowerCase()), data);
@@ -103,6 +107,73 @@ public abstract class Unmarshaller extends CommunContext {
 
         return obj;
 
+    }
+
+    /**
+     * Correction de valeur du au last.
+     * recalcule des Offeset <br />
+     * seul un last peux etre present dans le bean
+     * @param fDligneRoot the f dligne root
+     * @param data the data
+     * @param position the position
+     * @throws JFFPBException the JFFPB exception
+     */
+    protected void correctionDeValeurDuAuLast(List<FieldPositional> fDligneRoot, String data) throws JFFPBException {
+      int unLaste = 0 ;
+        for (int i = 0; i < fDligneRoot.size(); i++) {
+
+            FieldPositional field = fDligneRoot.get(i);
+
+            if (field.getPositionnalMappingParse().laste()) {
+
+                int cumule_reste_longeur = 0;
+                int longeurChainerestenteacouper = data.length() - i;
+                for (int j = i + 1; j < fDligneRoot.size(); j++) {
+                    cumule_reste_longeur =  cumule_reste_longeur+fDligneRoot.get(j).getPositionnalMappingParse().length();
+
+                }
+                
+                changeAnnotationValue(fDligneRoot.get(i).getPositionnalMappingParse(), "length",
+                        longeurChainerestenteacouper-cumule_reste_longeur);
+                
+                
+                for (int j = i + 1; j < fDligneRoot.size(); j++) {
+
+                    changeAnnotationValue(fDligneRoot.get(j).getPositionnalMappingParse(), "offset",
+                            fDligneRoot.get(j).getPositionnalMappingParse().length()+ longeurChainerestenteacouper-cumule_reste_longeur);
+
+
+                }
+
+            }
+
+        }
+      if(unLaste > 1){
+          
+          throw new JFFPBException("Trop de laste declaré dans la class . Arret du traitement !" );
+      }
+
+    }
+
+    /**
+     * Changes the annotation value for the given key of the given annotation to newValue and returns the previous value.
+     */
+    @SuppressWarnings("unchecked")
+    public static void changeAnnotationValue(PositionalMappingParse annotation, String key, Object newValue) throws JFFPBException {
+        try {
+            Object handler = Proxy.getInvocationHandler(annotation);
+            Field f = handler.getClass().getDeclaredField("memberValues");
+            f.setAccessible(true);
+            Map<String, Object> memberValues = (Map<String, Object>) f.get(handler);
+            Object oldValue = memberValues.get(key);
+            if (oldValue == null || oldValue.getClass() != newValue.getClass()) {
+                throw new JFFPBException(" IllegalArgumentException  ");
+
+            }
+            memberValues.put(key, newValue);
+        } catch (Exception e) {
+            throw new JFFPBException(" Nombre de colone different de la reorganosation " + e.getMessage());
+        }
     }
 
     /**

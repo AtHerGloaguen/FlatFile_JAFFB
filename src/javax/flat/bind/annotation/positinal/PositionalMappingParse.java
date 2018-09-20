@@ -20,6 +20,8 @@ import java.lang.annotation.Target;
  * @see #padding()
  * @see #charcatereRepliForPadding()
  * @see #stripChaine()
+ * @see #DefaultValue()
+ * @see #variant()
  * @author Gloaguen Joel
  */
 @Retention(RetentionPolicy.RUNTIME)
@@ -107,5 +109,16 @@ public @interface PositionalMappingParse {
      * @return
      */
     boolean desactivate() default false;
+
+    /**
+     * Laste.
+     * permet la lecture d'un data variant avec une soustraction  <br />
+     * des offsets suivant pour un recalcule des découpages <br />
+     * 
+     * seule un last peur etre present dans la class
+     *
+     * @return true, if successful
+     */
+    boolean laste() default false;
 
 }

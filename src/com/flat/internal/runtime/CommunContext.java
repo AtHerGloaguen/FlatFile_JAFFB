@@ -50,8 +50,8 @@ public class CommunContext {
 
         @Override
         public int compare(final FieldPositional o1, final FieldPositional o2) {
-
-            return Integer.compare(o1.getPositionnalMappingParse().offset(), o2.getPositionnalMappingParse().offset());
+            int com =Integer.compare(o1.getPositionnalMappingParse().offset(), o2.getPositionnalMappingParse().offset() ) ;
+            return com  == 0 ? Boolean.compare(o2.getPositionnalMappingParse().laste(),o1.getPositionnalMappingParse().laste()): com;
         }
     };
 
@@ -92,8 +92,13 @@ public class CommunContext {
             throw new JFFPBException("annotation PositionnalFormatRootElement manquante !");
         }
 
+       
+    
+        
         this.positionalMakeRootElems = new ArrayList<PositionalMakeRootElem>(entTab.length);
 
+        
+                
         for (Field ent : entTab) {
 
             PositionalMappingParseRootElem inti = PositionalMakeAnnotation.getFieldPositionalMappingParseRootElem(ent);

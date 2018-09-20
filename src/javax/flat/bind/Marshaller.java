@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -35,24 +36,47 @@ public abstract class Marshaller extends CommunContext {
      * avec les valeurs de l'objet passé en paramétre
      */
     public abstract void marshal(Object object, File fichier) throws JFFPBException;
-
+    /**
+     * génére le fichier passé en paramétre,<br />
+     * avec les valeurs de l'objet passé en paramétre
+     */
+    public abstract void marshal(Object object, File fichier, Charset iso) throws JFFPBException;
+    
+    
     /**
      * génére le OutputStream passé en paramétre,<br />
      * avec les valeurs de l'objet passé en paramétre
      */
     public abstract void marshal(Object object, OutputStream out) throws JFFPBException;
+    /**
+     * génére le OutputStream passé en paramétre,<br />
+     * avec les valeurs de l'objet passé en paramétre
+     */
+    public abstract void marshal(Object object, OutputStream out, Charset is) throws JFFPBException;
 
     /**
      * génére le fichier passé en paramétre,<br />
      * avec les valeurs de l'objet passé en paramétre
      */
     public abstract void marshal(Object object, File fichier, Boolean carriageReturn) throws JFFPBException;
-
-    /**
+    
+   /**
+    * génére le fichier passé en paramétre,<br />
+    * avec les valeurs de l'objet passé en paramétre
+    */
+   public abstract void marshal(Object object, File fichier, Charset is, Boolean carriageReturn) throws JFFPBException;
+    
+   /**
      * génére le OutputStream passé en paramétre,<br />
      * avec les valeurs de l'objet passé en paramétre
      */
     public abstract void marshal(Object object, OutputStream out, Boolean carriageReturn) throws JFFPBException;
+    
+    /**
+     * génére le OutputStream passé en paramétre,<br />
+     * avec les valeurs de l'objet passé en paramétre
+     */
+    public abstract void marshal(Object object, OutputStream out, Charset is, Boolean carriageReturn) throws JFFPBException;
 
     /**
      * @param instanceObject
