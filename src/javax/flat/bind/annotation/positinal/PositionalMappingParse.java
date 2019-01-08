@@ -14,6 +14,7 @@ import java.lang.annotation.Target;
  * annotation de description des variables <br />
  * qui sont dans le fichier <br />
  * 
+ * @author Gloaguen Joel
  * @see #offset()
  * @see #length()
  * @see #required()
@@ -22,7 +23,8 @@ import java.lang.annotation.Target;
  * @see #stripChaine()
  * @see #DefaultValue()
  * @see #variant()
- * @author Gloaguen Joel
+ * @see #desactivate()
+ * @see #laste()
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD, FIELD })
@@ -104,7 +106,7 @@ public @interface PositionalMappingParse {
     boolean variant() default false;
 
     /**
-     * desactive la valeur
+     * desactive la valeur a la lecture
      * 
      * @return
      */
