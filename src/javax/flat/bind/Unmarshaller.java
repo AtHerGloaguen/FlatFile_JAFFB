@@ -110,16 +110,16 @@ public abstract class Unmarshaller extends CommunContext {
     }
 
     /**
-     * Correction de valeur du au last.
-     * recalcule des Offeset <br />
+     * Correction de valeur du au last. recalcule des Offeset <br />
      * seul un last peux etre present dans le bean
+     * 
      * @param fDligneRoot the f dligne root
      * @param data the data
      * @param position the position
      * @throws JFFPBException the JFFPB exception
      */
     protected void correctionDeValeurDuAuLast(List<FieldPositional> fDligneRoot, String data) throws JFFPBException {
-      int unLaste = 0 ;
+        int unLaste = 0;
         for (int i = 0; i < fDligneRoot.size(); i++) {
 
             FieldPositional field = fDligneRoot.get(i);
@@ -129,29 +129,26 @@ public abstract class Unmarshaller extends CommunContext {
                 int cumule_reste_longeur = 0;
                 int longeurChainerestenteacouper = data.length() - i;
                 for (int j = i + 1; j < fDligneRoot.size(); j++) {
-                    cumule_reste_longeur =  cumule_reste_longeur+fDligneRoot.get(j).getPositionnalMappingParse().length();
+                    cumule_reste_longeur = cumule_reste_longeur + fDligneRoot.get(j).getPositionnalMappingParse().length();
 
                 }
-                
-                changeAnnotationValue(fDligneRoot.get(i).getPositionnalMappingParse(), "length",
-                        longeurChainerestenteacouper-cumule_reste_longeur);
-                
-                
+
+                changeAnnotationValue(fDligneRoot.get(i).getPositionnalMappingParse(), "length", longeurChainerestenteacouper - cumule_reste_longeur);
+
                 for (int j = i + 1; j < fDligneRoot.size(); j++) {
 
                     changeAnnotationValue(fDligneRoot.get(j).getPositionnalMappingParse(), "offset",
-                            fDligneRoot.get(j).getPositionnalMappingParse().length()+ longeurChainerestenteacouper-cumule_reste_longeur);
-
+                            fDligneRoot.get(j).getPositionnalMappingParse().offset() + longeurChainerestenteacouper - cumule_reste_longeur);
 
                 }
 
             }
 
         }
-      if(unLaste > 1){
-          
-          throw new JFFPBException("Trop de laste declaré dans la class . Arret du traitement !" );
-      }
+        if (unLaste > 1) {
+
+            throw new JFFPBException("Trop de laste declaré dans la class . Arret du traitement !");
+        }
 
     }
 
