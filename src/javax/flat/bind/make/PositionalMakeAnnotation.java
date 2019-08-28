@@ -95,12 +95,13 @@ public class PositionalMakeAnnotation {
         for (Method element : value.getMethods()) {
             if ("unmarshal".equals(element.getName()) && parsingORunparsing.equals(UNPARSING)) {
                 for (Class<?> class1 : element.getParameterTypes()) {
-                    if (class1.getName().equals(valeur.getClass().getName()))
                         try {
+                        if (valeur.getClass().getName().equals(class1.getName())) {
+
                             return value.newInstance().unmarshal(valeur);
-                        } catch (InstantiationException e) {
-                            throw new JFFPBException(e);
-                        } catch (IllegalAccessException e) {
+                        }
+
+                        } catch (Exception e) {
                             throw new JFFPBException(e);
                         }
                 }

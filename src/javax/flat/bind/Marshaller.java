@@ -243,7 +243,7 @@ public abstract class Marshaller extends CommunContext {
 
             PositionalMappingParse positionnalMappingParce = PositionalMakeAnnotation.getFieldPositionnalMappingParse(field);
             // si il n'y a pas d'annotation ou si désactiver pour l'ecriture
-            if (positionnalMappingParce == null || !positionnalMappingParce.desactivateOut()) {
+            if (positionnalMappingParce == null || positionnalMappingParce.desactivateOut()) {
                 continue;
             }
             if (desactivateAttrib && setDesactivate.contains(field.getName())) {

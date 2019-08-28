@@ -62,10 +62,10 @@ public class ControleInfo {
         try {
             fdcp = retroFields(element.getFormatRootElem().getForClass().newInstance(), fdcp, numberField);
         } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
+
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
+
             e.printStackTrace();
         }
 
@@ -139,10 +139,10 @@ public class ControleInfo {
         try {
             declaredMethods = retroMethodes(argFormatRoot.getForClass().newInstance(), declaredMethods, numberMethode);
         } catch (InstantiationException e) {
-            // TODO Auto-generated catch block
+
             e.printStackTrace();
         } catch (IllegalAccessException e) {
-            // TODO Auto-generated catch block
+
             e.printStackTrace();
         }
 

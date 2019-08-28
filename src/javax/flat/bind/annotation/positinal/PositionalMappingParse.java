@@ -27,6 +27,7 @@ import java.lang.annotation.Target;
  * @see #desactivate()
  * @see #desactivateOut()
  * @see #laste()
+ * @see #original()
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD, FIELD })
@@ -130,5 +131,12 @@ public @interface PositionalMappingParse {
      * @return true, if successful
      */
     boolean laste() default false;
+
+    /**
+     * Original. conserve la valeur original
+     * 
+     * @return the int
+     */
+    int original() default -1;
 
 }

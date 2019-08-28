@@ -69,7 +69,7 @@ public abstract class Unmarshaller extends CommunContext {
      * @return
      * @throws JFFPBException
      */
-    public Object convertStringChaineInObject(Object obj, String data) throws JFFPBException {
+    public synchronized Object convertStringChaineInObject(Object obj, String data) throws JFFPBException {
         // l'intance obj exista deja
         List<FieldPositional> fDligneRoot = new ArrayList<FieldPositional>();
         Map<String, Method> map = new HashMap<String, Method>();
@@ -104,8 +104,39 @@ public abstract class Unmarshaller extends CommunContext {
                 break;
             }
         }
-
+        restorDeValeurDuAuLast(fDligneRoot);
         return obj;
+
+    }
+
+    private void restorDeValeurDuAuLast(List<FieldPositional> fDligneRoot) {
+        // LOG.info("restor De Va leur Du Au Last Field est laste. recalcule de ");
+
+        for (int i = 0; i < fDligneRoot.size(); i++) {
+
+            FieldPositional field = fDligneRoot.get(i);
+
+            if (field.getPositionnalMappingParse().laste()) {
+                try {
+
+                        changeAnnotationValue(fDligneRoot.get(i).getPositionnalMappingParse(), "length", 0);
+                    // LOG.info(String.format("restor De Valeur Du Au Last [%s] ", field.getField().getName()));
+
+                    for (int j = i + 1; j < fDligneRoot.size(); j++) {
+
+                        changeAnnotationValue(fDligneRoot.get(j).getPositionnalMappingParse(), "offset",
+                                fDligneRoot.get(j).getPositionnalMappingParse().original());
+                        // LOG.info(String.format("restor De Valeur Du Au Last [%s] ", fDligneRoot.get(j).getField().getName()));
+
+                    }
+                } catch (Exception e) {
+
+                    e.printStackTrace();
+                }
+
+                break;
+            }
+        }
 
     }
 
@@ -118,14 +149,14 @@ public abstract class Unmarshaller extends CommunContext {
      * @param position the position
      * @throws JFFPBException the JFFPB exception
      */
-    protected void correctionDeValeurDuAuLast(List<FieldPositional> fDligneRoot, String data) throws JFFPBException {
+    protected synchronized void correctionDeValeurDuAuLast(List<FieldPositional> fDligneRoot, String data) throws JFFPBException {
         int unLaste = 0;
         for (int i = 0; i < fDligneRoot.size(); i++) {
 
             FieldPositional field = fDligneRoot.get(i);
 
             if (field.getPositionnalMappingParse().laste()) {
-
+                // LOG.info(String.format("Le Field est laste. recalcule de [%s] ", field.getField().getName()));
                 int cumule_reste_longeur = 0;
                 int longeurChainerestenteacouper = data.length() - i;
                 for (int j = i + 1; j < fDligneRoot.size(); j++) {
@@ -141,13 +172,9 @@ public abstract class Unmarshaller extends CommunContext {
                             fDligneRoot.get(j).getPositionnalMappingParse().offset() + longeurChainerestenteacouper - cumule_reste_longeur);
 
                 }
-
-            }
-
+                break;
         }
-        if (unLaste > 1) {
 
-            throw new JFFPBException("Trop de laste declaré dans la class . Arret du traitement !");
         }
 
     }
@@ -156,7 +183,7 @@ public abstract class Unmarshaller extends CommunContext {
      * Changes the annotation value for the given key of the given annotation to newValue and returns the previous value.
      */
     @SuppressWarnings("unchecked")
-    public static void changeAnnotationValue(PositionalMappingParse annotation, String key, Object newValue) throws JFFPBException {
+    public synchronized static void changeAnnotationValue(PositionalMappingParse annotation, String key, Object newValue) throws JFFPBException {
         try {
             Object handler = Proxy.getInvocationHandler(annotation);
             Field f = handler.getClass().getDeclaredField("memberValues");
@@ -167,6 +194,7 @@ public abstract class Unmarshaller extends CommunContext {
                 throw new JFFPBException(" IllegalArgumentException  ");
 
             }
+            // LOG.info(String.format("Clef modifier [%s] ensiene valeur [%s] nouvelle valeur calculer [%s] ", key, oldValue, newValue));
             memberValues.put(key, newValue);
         } catch (Exception e) {
             throw new JFFPBException(" Nombre de colone different de la reorganosation " + e.getMessage());
@@ -182,18 +210,18 @@ public abstract class Unmarshaller extends CommunContext {
      * @return Object de la class
      * @throws Throwable
      */
-    public Object convertStringChaineInObject(Class<?> myClass, String data) throws JFFPBException {
+    public synchronized Object convertStringChaineInObject(Class<?> myClass, String data) throws JFFPBException {
         // creation de l'instance
         Object obj = getNewInstanceType(myClass);
         return convertStringChaineInObject(obj, data);
 
     }
 
-    public Object convertChaineCsvInObject(Class<?> myClass, String data, String regex) throws JFFPBException {
+    public synchronized Object convertChaineCsvInObject(Class<?> myClass, String data, String regex) throws JFFPBException {
         return convertChaineCsvInObject(myClass, data, regex, null);
     }
 
-    public Object convertChaineCsvInObject(Class<?> myClass, String data, String regex, int[] reorganisation) throws JFFPBException {
+    public synchronized Object convertChaineCsvInObject(Class<?> myClass, String data, String regex, int[] reorganisation) throws JFFPBException {
         Object obj = getNewInstanceType(myClass);
         return convertChaineCsvInObject(obj, data, regex, reorganisation);
     }
@@ -207,7 +235,7 @@ public abstract class Unmarshaller extends CommunContext {
      * @return Object of the Class
      * @throws Exception
      */
-    public Object convertChaineCsvInObject(Object obj, String data, String regex) throws JFFPBException {
+    public synchronized Object convertChaineCsvInObject(Object obj, String data, String regex) throws JFFPBException {
         return convertChaineCsvInObject(obj, data, regex, null);
 
     }
@@ -226,7 +254,7 @@ public abstract class Unmarshaller extends CommunContext {
      * @return Object of the Class
      * @throws Exception
      */
-    public Object convertChaineCsvInObject(Object obj, String data, String regex, int[] reorganisation) throws JFFPBException {
+    public synchronized Object convertChaineCsvInObject(Object obj, String data, String regex, int[] reorganisation) throws JFFPBException {
         boolean reorg = reorganisation != null ? true : false;
         List<String> listCSV = StringUtils.splitinList(regex, data);
 
@@ -282,6 +310,7 @@ public abstract class Unmarshaller extends CommunContext {
             Object obInvoke = null;
             String valueChaine = null;
             int depart = fieldPosiotinalAnnot.getPositionnalMappingParse().offset() - 1;
+            try {
 
             if (fieldPosiotinalAnnot.getPositionnalMappingParse().length() == -1) {
                 valueChaine = chaineCaractere.substring(depart);
@@ -290,7 +319,9 @@ public abstract class Unmarshaller extends CommunContext {
                 valueChaine = chaineCaractere.substring(depart, depart + fieldPosiotinalAnnot.getPositionnalMappingParse().length());
 
             }
-
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             if (fieldPosiotinalAnnot.getPositionnalMappingParse().stripChaine()) {
                 valueChaine = StringUtils.strip(valueChaine);
             }

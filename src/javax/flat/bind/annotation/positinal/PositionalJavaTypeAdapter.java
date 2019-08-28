@@ -39,6 +39,12 @@ public @interface PositionalJavaTypeAdapter {
     @SuppressWarnings("rawtypes")
     Class<? extends PositionalAdapter> value();
 
+    /**
+     * Default value. si la valeur est null alors on prend pour reference cette valeur <br />
+     * Donne plus de possibliliter que PositionalMappingParse.DefaultValue
+     * 
+     * @return the class<? extends positional default>
+     */
     @SuppressWarnings("rawtypes")
     Class<? extends PositionalDefault> DefaultValue() default PositionalDefault.class;
 
