@@ -28,8 +28,7 @@ public class MainSimpleJAFFB {
         JAFFBContext contex = JAFFBContext.newInstance(FileRootForFFPMSimple.class);
         Unmarshaller unmarshaller = contex.createUnmarshaller();
 
-        FileRootForFFPMSimple ffpmSimple = (FileRootForFFPMSimple) unmarshaller
-                .unmarshal(new File("src/test/resources/TestSimpleFileflat.txt"));
+        FileRootForFFPMSimple ffpmSimple = (FileRootForFFPMSimple) unmarshaller.unmarshal(new File("test/resources/TestSimpleFileflat.txt"));
 
         System.out.println(ffpmSimple.toString());
 
@@ -37,7 +36,7 @@ public class MainSimpleJAFFB {
          * ecriture d'un fichier a partir de l'object
          */
 
-        File fileReecrir = new File("src/test/resources/TestecrirNormanlFileflat.txt");
+        File fileReecrir = new File("test/resources/TestecrirNormanlFileflat.txt");
 
         Marshaller marshaller = JAFFBContext.newInstance().createMarshaller();
 
@@ -47,7 +46,7 @@ public class MainSimpleJAFFB {
          * ecriture d'un fichier a partir d'un object en utilisent le desactivation de certain attribut
          */
 
-        File fileDesactivat = new File("src/test/resources/TestecrirDesactivatFileflat.txt");
+        File fileDesactivat = new File("test/resources/TestecrirDesactivatFileflat.txt");
 
         marshaller = JAFFBContext.newInstance().createMarshaller();
 

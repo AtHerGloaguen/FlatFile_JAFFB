@@ -12,30 +12,26 @@ import com.ffpm.sample.fileflat.file.readcomplex.FileRootForFFPMComplex;
 
 /**
  * @author Gloax29
- *
  */
 public class MainComplexRegexFFPM {
 
-	/**
-	 * @param args
-	 * @throws Exception 
-	 */
-	public static void main(String[] args) throws Exception {
-		/**
-		 * lecture d'un fichier pour cree un object
- 		 * 
-		 */
-		
-		
-		JAFFBContext contex = JAFFBContext.newInstance(FileRootForFFPMComplex.class) ;
-		Unmarshaller unmarshaller = contex.createUnmarshaller();
-		
-		
-		FileRootForFFPMComplex ffpmComplex = (FileRootForFFPMComplex) unmarshaller.unmarshal(new File("src/test/resources/TestComplexRegexFileflat.txt"));
+    /**
+     * @param args
+     * @throws Exception
+     */
+    public static void main(String[] args) throws Exception {
+        /**
+         * lecture d'un fichier pour cree un object
+         */
 
-		System.out.println(ffpmComplex.toString());
-		
-		
-	}
+        JAFFBContext contex = JAFFBContext.newInstance(FileRootForFFPMComplex.class);
+        Unmarshaller unmarshaller = contex.createUnmarshaller();
+
+        FileRootForFFPMComplex ffpmComplex = (FileRootForFFPMComplex) unmarshaller
+                .unmarshal(new File("test/resources/TestComplexRegexFileflat1.txt"));
+
+        System.out.println(ffpmComplex.toString());
+
+    }
 
 }

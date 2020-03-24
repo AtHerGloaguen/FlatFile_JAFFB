@@ -58,7 +58,7 @@ public class Unmarshallerimp extends Unmarshaller {
         if (!file.exists()) {
             throw new JFFPBException("Fichier n'existe pas ! " + file.getAbsolutePath() + " path ==> " + new File("file").getAbsolutePath());
         }
-        return fileRunReadFile(file,Charset.defaultCharset());
+        return fileRunReadFile(file, Charset.defaultCharset());
     }
 
     @Override
@@ -128,11 +128,11 @@ public class Unmarshallerimp extends Unmarshaller {
                         obList = getNewInstanceList();
                     }
                     obj = getNewInstanceType(formatRoot.getForClass());
-                   
+
                     fdLigneRoot = ControleInfo.creatListFieldPositional(obj);
                     Collections.sort(fdLigneRoot, COMPARATEUR_RANG_FIELD);
                     // correction de valeur des offset avec laste
-                    
+
                     map = ControleInfo.creatMatForMethode(formatRoot);
 
                     ligne = fichierRead.readLine();

@@ -117,9 +117,10 @@ public abstract class Unmarshaller extends CommunContext {
             FieldPositional field = fDligneRoot.get(i);
 
             if (field.getPositionnalMappingParse().laste()) {
+
                 try {
 
-                        changeAnnotationValue(fDligneRoot.get(i).getPositionnalMappingParse(), "length", 0);
+                    changeAnnotationValue(fDligneRoot.get(i).getPositionnalMappingParse(), "length", 0);
                     // LOG.info(String.format("restor De Valeur Du Au Last [%s] ", field.getField().getName()));
 
                     for (int j = i + 1; j < fDligneRoot.size(); j++) {
@@ -129,6 +130,7 @@ public abstract class Unmarshaller extends CommunContext {
                         // LOG.info(String.format("restor De Valeur Du Au Last [%s] ", fDligneRoot.get(j).getField().getName()));
 
                     }
+
                 } catch (Exception e) {
 
                     e.printStackTrace();
@@ -173,7 +175,7 @@ public abstract class Unmarshaller extends CommunContext {
 
                 }
                 break;
-        }
+            }
 
         }
 
@@ -190,6 +192,7 @@ public abstract class Unmarshaller extends CommunContext {
             f.setAccessible(true);
             Map<String, Object> memberValues = (Map<String, Object>) f.get(handler);
             Object oldValue = memberValues.get(key);
+
             if (oldValue == null || oldValue.getClass() != newValue.getClass()) {
                 throw new JFFPBException(" IllegalArgumentException  ");
 
@@ -312,13 +315,13 @@ public abstract class Unmarshaller extends CommunContext {
             int depart = fieldPosiotinalAnnot.getPositionnalMappingParse().offset() - 1;
             try {
 
-            if (fieldPosiotinalAnnot.getPositionnalMappingParse().length() == -1) {
-                valueChaine = chaineCaractere.substring(depart);
-            } else {
+                if (fieldPosiotinalAnnot.getPositionnalMappingParse().length() == -1) {
+                    valueChaine = chaineCaractere.substring(depart);
+                } else {
 
-                valueChaine = chaineCaractere.substring(depart, depart + fieldPosiotinalAnnot.getPositionnalMappingParse().length());
+                    valueChaine = chaineCaractere.substring(depart, depart + fieldPosiotinalAnnot.getPositionnalMappingParse().length());
 
-            }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }

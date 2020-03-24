@@ -159,8 +159,8 @@ public class ControleInfo {
         int numberField = 0;
         Field[] fdcp = null;
         fdcp = retroFields(argobj, fdcp, numberField);
-        
-        for (Field field : fdcp ) {
+
+        for (Field field : fdcp) {
 
             rtnfdLigneRoot.add(new FieldPositional(field));
 
@@ -168,17 +168,16 @@ public class ControleInfo {
 
         return rtnfdLigneRoot;
     }
-    
-    
+
     public static Field[] retroFields(Class instanceObject, Field[] fdcp, int numberField) {
         Object obj = null;
         try {
-            obj = instanceObject.newInstance() ;
+            obj = instanceObject.newInstance();
         } catch (Exception e) {
-         
+
             e.printStackTrace();
         }
-        return retroFields( obj,  fdcp, numberField) ;
+        return retroFields(obj, fdcp, numberField);
     }
 
     public static Field[] retroFields(Object instanceObject, Field[] fdcp, int numberField) {

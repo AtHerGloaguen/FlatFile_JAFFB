@@ -54,6 +54,10 @@ public class Marshallerimp extends Marshaller {
                 int numberField = 0;
                  Field[] fdcp = null ;// formatRoot.getForClass().getDeclaredFields();
                 fdcp = ControleInfo.retroFields(formatRoot.getForClass() , fdcp, numberField);
+                
+                
+                
+                
                 iterableElement.getField().setAccessible(true);
 
                 int longueur = formatRoot.getValuLongueurChaine() < 0 ? 0 : formatRoot.getValuLongueurChaine();

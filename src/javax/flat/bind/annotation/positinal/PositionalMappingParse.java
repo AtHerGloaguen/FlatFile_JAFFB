@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
  * annotation de description des variables <br />
  * qui sont dans le fichier <br />
  * .
- * 
+ *
  * @author Gloaguen Joel
  * @see #offset()
  * @see #length()
@@ -27,7 +27,6 @@ import java.lang.annotation.Target;
  * @see #desactivate()
  * @see #desactivateOut()
  * @see #laste()
- * @see #original()
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ METHOD, FIELD })

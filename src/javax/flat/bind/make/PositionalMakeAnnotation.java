@@ -95,15 +95,15 @@ public class PositionalMakeAnnotation {
         for (Method element : value.getMethods()) {
             if ("unmarshal".equals(element.getName()) && parsingORunparsing.equals(UNPARSING)) {
                 for (Class<?> class1 : element.getParameterTypes()) {
-                        try {
+                    try {
                         if (valeur.getClass().getName().equals(class1.getName())) {
 
                             return value.newInstance().unmarshal(valeur);
                         }
 
-                        } catch (Exception e) {
-                            throw new JFFPBException(e);
-                        }
+                    } catch (Exception e) {
+                        throw new JFFPBException(e);
+                    }
                 }
 
             }
@@ -153,6 +153,7 @@ public class PositionalMakeAnnotation {
     @SuppressWarnings("javadoc")
     public static Object typeAdapterPimitif(Object valeur, Class<?> typeClass) throws JFFPBException {
         String simpleName = typeClass.getSimpleName();
+
         try {
 
             if ("byte".equals(simpleName)) {
