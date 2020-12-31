@@ -101,6 +101,8 @@ public class FileRootForFFPMSimple {
 ````
 classe si les lignes sont à différencier avec une Regex
 
+befort a ete rajouté pour traité la chaine avant parcing
+
 ```java
 
 @PositionalMappingParseRootElem(startRowsIterationLigne = 1,list = true, name = "enteteSimple", expression = "^((Test1Simple )(.*)|(Test1Complex)(.*))", theclass = EnteteComplex.class, charcatereRepli = ' ')
