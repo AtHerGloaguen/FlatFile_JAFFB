@@ -22,6 +22,7 @@ import java.util.regex.Pattern;
 
 import javax.flat.bind.JFFPBException;
 import javax.flat.bind.Unmarshaller;
+import javax.flat.bind.annotation.adapter.PositionalBefort;
 import javax.flat.bind.api.FieldPositional;
 import javax.flat.bind.api.FormatRootElem;
 import javax.flat.bind.api.PositionalParseExpression;
@@ -30,6 +31,8 @@ import javax.flat.bind.make.PositionalMakeRootElem;
 import javax.flat.bind.utils.StringUtils;
 
 /**
+ * deserialisation de fichier
+ * 
  * @author root
  */
 public class Unmarshallerimp extends Unmarshaller {
@@ -110,11 +113,15 @@ public class Unmarshallerimp extends Unmarshaller {
         List<FieldPositional> fdLigneRoot = null;
         Map<String, Method> map = null;
         String ligne = null;
+        String ligneElse = null;
         List<Object> obList = null;
         Object obLigneRoot = null;
         Object obj = null;
         Set<Object> keyExpre = null;
         Pattern pattern = null;
+        PositionalBefort befort = null;
+        boolean forBefort = false;
+        Class<?> clazzref = Class.class;
         try (BufferedReader fichierRead = new BufferedReader(new InputStreamReader(inputStreamFile, iso))) {
             // lecture de fichier
             if (this.expressioninject == null) {
@@ -124,6 +131,12 @@ public class Unmarshallerimp extends Unmarshaller {
                 for (PositionalMakeRootElem itErableElement : this.positionalMakeRootElems) {
 
                     FormatRootElem formatRoot = itErableElement.getFormatRootElem();
+                    Class<?> clazzBefort = formatRoot.getBefort();
+                    forBefort = false;
+                    if (!clazzBefort.getName().equalsIgnoreCase(clazzref.getName())) {
+                        befort = (PositionalBefort) getNewInstanceType(clazzBefort);
+                        forBefort = true;
+                    }
                     if (formatRoot.isIslist()) {
                         obList = getNewInstanceList();
                     }
@@ -134,9 +147,15 @@ public class Unmarshallerimp extends Unmarshaller {
                     // correction de valeur des offset avec laste
 
                     map = ControleInfo.creatMatForMethode(formatRoot);
-
                     ligne = fichierRead.readLine();
+
                     while (StringUtils.isNotBlank(ligne)) {
+                        // traitement befort de la chaine de caractere
+                        if (forBefort) {
+                            ligne = befort.befort(ligne);
+
+                        }
+
                         correctionDeValeurDuAuLast(fdLigneRoot, ligne);
                         if (!formatRoot.isIslist() && (formatRoot.getStartRowsIterationLigne().equals(itElement))) {
 
@@ -218,14 +237,15 @@ public class Unmarshallerimp extends Unmarshaller {
 
                 keyExpre = this.expressioninject.keySet();
                 PositionalParseExpression patternExpr = null;
-                ligne = fichierRead.readLine();
+                ligneElse = fichierRead.readLine();
                 // pilotage par la lecture des lignes
 
-                while (StringUtils.isNotBlank(ligne)) {
+                while (StringUtils.isNotBlank(ligneElse)) {
+
                     for (Iterator<Object> iterator = keyExpre.iterator(); iterator.hasNext();) {
                         pattern = (Pattern) iterator.next();
 
-                        if (pattern.matcher(ligne).find()) {
+                        if (pattern.matcher(ligneElse).find()) {
                             patternExpr = this.expressioninject.get(pattern);
                             break;
                         }
@@ -246,16 +266,31 @@ public class Unmarshallerimp extends Unmarshaller {
                         }
                         // passe à la prochaine ligne
                         if (patternExpr == null) {
-
+                            ligneElse = fichierRead.readLine();
+                            itElement++;
                             continue;
                         }
                     }
                     // contréle de la longueur
                     if (patternExpr.getElement().getFormatRootElem().getValuLongueurChaine() != -1
-                            && (patternExpr.getElement().getFormatRootElem().getValuLongueurChaine() != ligne.length())) {
+                            && (patternExpr.getElement().getFormatRootElem().getValuLongueurChaine() != ligneElse.length())) {
                         throw new JFFPBException("Non conformité de la chaine de caracter entete Longueur Differente! "
-                                + patternExpr.getElement().getFormatRootElem().getValuLongueurChaine() + " demander pour " + ligne.length()
+                                + patternExpr.getElement().getFormatRootElem().getValuLongueurChaine() + " demander pour " + ligneElse.length()
                                 + " reel");
+                    }
+
+                    Class<?> clazzBefort = patternExpr.getElement().getFormatRootElem().getBefort();
+
+                    forBefort = false;
+                    if (!clazzBefort.getName().equalsIgnoreCase(clazzref.getName())) {
+                        befort = (PositionalBefort) getNewInstanceType(clazzBefort);
+                        forBefort = true;
+                    }
+
+                    // traitement befort de la chaine de caractere
+                    if (forBefort) {
+                        ligneElse = befort.befort(ligneElse);
+
                     }
 
                     // si ce n'est pas une liste
@@ -265,11 +300,9 @@ public class Unmarshallerimp extends Unmarshaller {
                             // passage par chaque élément pour injecter
                             // information.
                             makeInvokeSetMethodes(patternExpr.getNewInstanceType(), field,
-                                    patternExpr.getMap().get(field.getNamSetMethode().toLowerCase()), ligne);
+                                    patternExpr.getMap().get(field.getNamSetMethode().toLowerCase()), ligneElse);
 
                         }
-
-                        itElement++;
 
                     } else {// si c'est une liste
 
@@ -277,13 +310,14 @@ public class Unmarshallerimp extends Unmarshaller {
 
                         for (FieldPositional field : patternExpr.getFd_LigneRoot()) {
 
-                            makeInvokeSetMethodes(obLigneRoot, field, patternExpr.getMap().get(field.getNamSetMethode().toLowerCase()), ligne);
+                            makeInvokeSetMethodes(obLigneRoot, field, patternExpr.getMap().get(field.getNamSetMethode().toLowerCase()), ligneElse);
 
                         }
                         ((List<Object>) patternExpr.getNewInstanceType()).add(obLigneRoot);
-                        itElement++;
+
                     }
-                    ligne = fichierRead.readLine();
+                    itElement++;
+                    ligneElse = fichierRead.readLine();
                 }
                 for (Object pattern2 : keyExpre) {
 
@@ -300,6 +334,8 @@ public class Unmarshallerimp extends Unmarshaller {
 
             if (ligne != null)
                 st.append(" ligne ==> " + ligne);
+            if (ligneElse != null)
+                st.append(" ligneElse ==> " + ligneElse);
             if (obj != null)
                 st.append(" obj ==> " + obj.toString());
             if (obLigneRoot != null)

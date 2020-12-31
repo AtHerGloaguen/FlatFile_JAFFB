@@ -137,6 +137,7 @@ public class PositionalMakeAnnotation {
         format.setValuLongueurChaine(fieldClassMain2.valuLongueurChaine());
         format.setNumbersRowsIterator(fieldClassMain2.numbersRowsIterator());
         format.setForClass(fieldClassMain2.theclass());
+        format.setBefort(fieldClassMain2.befort());
         format.setCharRemplissage(fieldClassMain2.charcatereRepli());
         format.setExpression(fieldClassMain2.expression());
 

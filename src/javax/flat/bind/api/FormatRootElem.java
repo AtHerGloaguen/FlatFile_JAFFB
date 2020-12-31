@@ -18,6 +18,7 @@ public class FormatRootElem {
     private String name;
     private boolean islist = false;
     private Class<?> forClass;
+    private Class<?> befort;
     private char charRemplissage;
     private String expression;
 
@@ -155,6 +156,24 @@ public class FormatRootElem {
     public String getExpression() {
         return this.expression;
 
+    }
+
+    /**
+     * Getter befort
+     * 
+     * @return the befort
+     */
+    public Class<?> getBefort() {
+        return befort;
+    }
+
+    /**
+     * Setter befort
+     * 
+     * @param befort the befort to set
+     */
+    public void setBefort(Class<?> befort) {
+        this.befort = befort;
     }
 
     @Override
