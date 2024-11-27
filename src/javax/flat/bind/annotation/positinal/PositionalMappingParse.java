@@ -77,12 +77,12 @@ public @interface PositionalMappingParse {
 
     /**
      * indique le caractere de remplisage.<br />
-     * si il n'est pas indiqu�, la valeur par default est l'espace<br />
+     * si il n'est pas indiqué, la valeur par default est l'espace<br />
      * et la vaieur est pris en compte si la longueur de chaine <bt /> {@link #valuLongueurChaine()}est valoriser
      * 
      * @return
      */
-    char charcatereRepliForPadding() default '\u0000';
+    char charcatereRepliForPadding() default '\u0020';
 
     /**
      * supprime les espace devant et deriere a la lecture

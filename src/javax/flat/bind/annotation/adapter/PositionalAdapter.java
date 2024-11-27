@@ -8,7 +8,7 @@ import javax.flat.bind.JFFPBException;
 
 /**
  * @author Gloaguen Joel <br />
- *         class qui propose la possibilit� de convertir les valeurs dans le format demand� <br />
+ *         class qui propose la possibilité de convertir les valeurs dans le format demandé <br />
  * @see #unparsing
  * @see #parsing
  * @param <String> Type en entrer toujours String
@@ -18,7 +18,7 @@ import javax.flat.bind.JFFPBException;
 public abstract class PositionalAdapter<String, BoundType> {
 
     /**
-     * pour convertir au format demand� � la creation de l object <br />
+     * pour convertir au format demandé é la creation de l object <br />
      * exemple : <br/>
      * String en Integer : 00001 en 1
      * 

@@ -22,7 +22,7 @@ import java.lang.annotation.Target;
 public @interface PositionalControlRegex {
 
 	/**
-	 * expretion reguliere qui sera test�. en relation avec
+	 * expretion reguliere qui sera testé. en relation avec
 	 * {@link #required()} si la valeur est requise et arrete le traitement<br />
 	 * en Exception <br />
 	 * si non un simple message est indique<br />

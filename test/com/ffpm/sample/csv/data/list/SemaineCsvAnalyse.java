@@ -10,6 +10,9 @@ import java.lang.reflect.Field;
 import java.util.Date;
 
 import javax.flat.bind.annotation.csv.CsvMappingParse;
+import javax.flat.bind.annotation.positinal.PositionalJavaTypeAdapter;
+
+import com.ffpm.sample.csv.data.DateConvertddMMyyyy;
 
 /**
  * TODO : Description
@@ -18,11 +21,12 @@ import javax.flat.bind.annotation.csv.CsvMappingParse;
  *
  */
 public class SemaineCsvAnalyse {
-    
+	@CsvMappingParse(offset = 1)
     private String  numeroSemaine ;
-    @CsvMappingParse(offset = 1)
+    @CsvMappingParse(offset = 2)
     private Integer quantiteForSemaine  ;
-    
+    @CsvMappingParse(offset = 3)
+    @PositionalJavaTypeAdapter(value = DateConvertddMMyyyy.class)
     private Date dateDeDebut ;
     
     

@@ -40,8 +40,10 @@ public class MainConvertObjectinChaine {
          */
         // ligneSimple.setColume(ligneSimple.getColume().trim() ) ;
         Marshaller marshaller = contex.createMarshaller();
-        String inverse = marshaller.convertObjectInStringChaine(ligneSimple, ' ', 185);
-
+        char str =' ' ;
+        String inverse = marshaller.convertObjectInStringChaine(ligneSimple, " ".charAt(0), 185);
+        char[] strt = {str} ;
+        System.out.println(" value de l'espace " +new String( strt ) .toString());
         System.out.println(inverse);
         /**
          * creation d' une chaine de caractere avec desactivation
@@ -54,7 +56,7 @@ public class MainConvertObjectinChaine {
          * avec indication de remplissage et longueur avec desactivation des champts production de chaine de longueur indiquer
          */
 
-        String inverseDesac = marshaller.convertObjectInStringChaine(ligneSimple, '\u0000', 185, desactivate);
+        String inverseDesac = marshaller.convertObjectInStringChaine(ligneSimple, '\u0020', 185, desactivate);
 
         System.out.println(inverseDesac);
         /**

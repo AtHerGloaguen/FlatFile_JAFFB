@@ -46,8 +46,8 @@ public @interface PositionalMappingParseRootElem {
     int startRowsIterationLigne() default 1;
 
     /**
-     * indique le nombre de lignes consern� par cette element,<br />
-     * si non indiqu�. il serat le dernier ou le seule consern�.<br />
+     * indique le nombre de lignes conserné par cette element,<br />
+     * si non indiqué. il serat le dernier ou le seule conserné.<br />
      * indique l'ordre de traitement des lignes <br />
      * cela peut concerner les fichiers avec un nombre de ligne<br/>
      * fixe : <br />
@@ -89,10 +89,10 @@ public @interface PositionalMappingParseRootElem {
     /**
      * indique si l'attribus est un List.<br/>
      * valeur par default est false<br />
-     * si la valeur est � true, indique le nom de la class <br />
+     * si la valeur est é true, indique le nom de la class <br />
      * au parametre {@link #theclass()}.
      * <p>
-     * Pour les Listes le Getteur dois testes la nullit� <br />
+     * Pour les Listes le Getteur dois testes la nullité <br />
      * et dans ce cas l'instancier.
      * </p>
      * 
@@ -102,12 +102,12 @@ public @interface PositionalMappingParseRootElem {
 
     /**
      * indique le caractere de remplisage.<br />
-     * si il n'est pas indiqu�, la valeur par default est l'espace<br />
+     * si il n'est pas indiqué, la valeur par default est l'espace<br />
      * et la vaieur est pris en compte si la longueur de chaine <bt /> {@link #valuLongueurChaine()}est valoriser
      * 
      * @return
      */
-    char charcatereRepli() default '\u0000';
+    char charcatereRepli() default '\u0020';
 
     /**
      * expression d'appartenance.<br/>
@@ -116,9 +116,9 @@ public @interface PositionalMappingParseRootElem {
      * cela indique au parseur une methode de fonctionnement differente il n'y a plus d'ordre dans la class principal #PositionalMappingParseRootElem
      * </p>
      * <p>
-     * si la ligne match avec l'expression, celle si est inject�<br />
+     * si la ligne match avec l'expression, celle si est inject <br />
      * dens la variable d'apartenence.<br />
-     * . si c'est une list l'objet est ajout�.
+     * . si c'est une list l'objet est ajouté.
      * </p>
      * <p>
      * pour qu'une variable recupaire toutes les lignes<br />
@@ -133,14 +133,14 @@ public @interface PositionalMappingParseRootElem {
     String expression() default "-X";
 
     /**
-     * nom de la classe de l'element. si c'est une liste, il faut l'indiqu� par defaut DEFAULT.class si list a false
+     * nom de la classe de l'element. si c'est une liste, il faut l'indiqué par defaut DEFAULT.class si list a false
      * 
      * @return
      */
     Class<?> theclass();
 
     /**
-     * nom de la classe post. qui doit erité PositionalAdapter
+     * nom de la classe post. qui doit eriter de PositionalAdapter
      * 
      * @return
      */

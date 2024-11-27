@@ -18,7 +18,7 @@ import javax.flat.bind.annotation.adapter.PositionalAdapter;
 import javax.flat.bind.annotation.adapter.PositionalDefault;
 
 /**
- * annotation servant a donn� le nom de la class qui Extende PositionalAdapter<String, ReponceType> <br />
+ * annotation servant a donné le nom de la class qui Extende PositionalAdapter<String, ReponceType> <br />
  * Si le format demander n'est pas un format primitif,<br />
  * cette annotation permet de convertir la chaine de carractere <br />
  * en Object complex et L'Object en chaine de carracere

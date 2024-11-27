@@ -28,7 +28,7 @@ public @interface CsvMappingParse {
      * indique la position dans la suite de valeur<br />
      * <br />
      * <br />
-     * de la chaine de caract�res lus
+     * de la chaine de caractéres lus
      * 
      * @return
      */
@@ -36,7 +36,7 @@ public @interface CsvMappingParse {
 
     /**
      * indique si l expression @PositionalControlRegex et obligatoire <br />
-     * La valeur par d�faut est false
+     * La valeur par défaut est false
      * 
      * @return
      */
