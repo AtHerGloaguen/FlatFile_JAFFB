@@ -24,6 +24,7 @@ import javax.flat.bind.JFFPBException;
 import javax.flat.bind.Marshaller;
 import javax.flat.bind.api.FormatRootElem;
 import javax.flat.bind.control.ControleInfo;
+import javax.flat.bind.make.CsvMakeRootElem;
 import javax.flat.bind.make.PositionalMakeRootElem;
 import javax.flat.bind.utils.StringUtils;
 
@@ -251,6 +252,119 @@ public class Marshallerimp extends Marshaller {
             throw new JFFPBException(e);
         }
     }
+
+	@Override
+	public void marshalCsv(Object object, File fichier) throws JFFPBException {
+		marshalCsv(object, fichier, Charset.forName(this.encoding));
+		
+	}
+
+	@Override
+	public void marshalCsv(Object object, File fichier, Charset iso) throws JFFPBException {
+		if (object == null) {
+            throw new JFFPBException("Object null !");
+        }
+        this.encoding = iso.name() ;
+        
+        valoriseObject(object);
+
+        fileRunWriteCsv(fichier);
+		
+	}
+
+	private void fileRunWriteCsv(File fichier) throws JFFPBException {
+		initVarCsv();
+	       
+        PrintWriter creerMonFichier = null;
+        try {
+            creerMonFichier = new PrintWriter(new BufferedWriter(new OutputStreamWriter(new FileOutputStream(fichier), encoding)), true);
+
+            String chaineForFile = null;
+            StringBuffer buffer = null;
+            boolean longeurIndiquer = true;
+
+            for (CsvMakeRootElem iterableElement : this.cvsMakeRootElems) {
+
+                FormatRootElem formatRoot = iterableElement.getFormatRootElem();
+                int numberField = 0;
+                 Field[] fdcp = null ;// formatRoot.getForClass().getDeclaredFields();
+                fdcp = ControleInfo.retroFields(formatRoot.getForClass() , fdcp, numberField);
+                
+                
+                
+                
+                iterableElement.getField().setAccessible(true);
+                
+                if (formatRoot.isIslist()) {
+
+                    @SuppressWarnings("unchecked")
+                    List<Object> list = (List<Object>) iterableElement.getField().get(this.object);
+                    for (Object objectdelaList : list) {
+
+                        chaineForFile = convertObjectInChaineCsv(objectdelaList,this.formatFile.getCharSeparateur() );
+                        if (this.carriageReturn) {
+                        creerMonFichier.println(chaineForFile);
+                        }else{
+                         creerMonFichier.print(chaineForFile); 
+                        }
+                    }
+                } else {
+                    chaineForFile = convertObjectInChaineCsv(iterableElement.getField().get(this.object),this.formatFile.getCharSeparateur());
+                    if (this.carriageReturn) {
+                        creerMonFichier.println(chaineForFile);
+                        }else{
+                            creerMonFichier.print(chaineForFile); 
+                        }
+
+                }
+
+            }
+            creerMonFichier.flush();
+            creerMonFichier.close();
+        } catch (IllegalAccessException e) {
+            throw new JFFPBException(e);
+        } catch (UnsupportedEncodingException e) {
+            throw new JFFPBException(e);
+        } catch (FileNotFoundException e) {
+            throw new JFFPBException(e);
+        }
+    }
+
+	@Override
+	public void marshalCsv(Object object, OutputStream out) throws JFFPBException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void marshalCsv(Object object, OutputStream out, Charset is) throws JFFPBException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void marshalCsv(Object object, File fichier, Boolean carriageReturn) throws JFFPBException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void marshalCsv(Object object, File fichier, Charset is, Boolean carriageReturn) throws JFFPBException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void marshalCsv(Object object, OutputStream out, Boolean carriageReturn) throws JFFPBException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void marshalCsv(Object object, OutputStream out, Charset is, Boolean carriageReturn) throws JFFPBException {
+		// TODO Auto-generated method stub
+		
+	}
 
    
 

@@ -11,8 +11,10 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.flat.bind.JFFPBException;
+import javax.flat.bind.api.FieldCsv;
 import javax.flat.bind.api.FieldPositional;
 import javax.flat.bind.api.FormatRootElem;
+import javax.flat.bind.make.CsvMakeRootElem;
 import javax.flat.bind.make.PositionalMakeRootElem;
 import javax.flat.bind.utils.StringUtils;
 
@@ -37,6 +39,21 @@ public class ControleInfo {
         return false;
     }
 
+    public static boolean controleDebutLigneCsv(List<CsvMakeRootElem> csvMakeRootElems) {
+        List<Integer> lis = new ArrayList<Integer>();
+        Set<Integer> setComp = new HashSet<Integer>();
+        for (CsvMakeRootElem element2 : csvMakeRootElems) {
+            lis.add(element2.getFormatRootElem().getStartRowsIterationLigne());
+            setComp.add(element2.getFormatRootElem().getStartRowsIterationLigne());
+        }
+
+        if (lis.size() != setComp.size()) {
+            return true;
+        }
+
+        return false;
+    }
+    
     public static Map<String, Method> creatMapClefMethode(PositionalMakeRootElem element) throws JFFPBException {
         Map<String, Method> map = new HashMap<String, Method>();
 
@@ -53,7 +70,22 @@ public class ControleInfo {
 
         return map;
     }
+    public static Map<String, Method> creatMapClefMethodeCsv(CsvMakeRootElem element) throws JFFPBException {
+        Map<String, Method> map = new HashMap<String, Method>();
 
+        Method[] declaredMethods = null;
+        int numberMethode = 0;
+
+        declaredMethods = retroMethodes(getNewInstanceType(element.getFormatRootElem().getForClass()), declaredMethods, numberMethode);
+
+        for (Method method : declaredMethods) {
+
+            map.put(method.getName().toLowerCase(), method);
+
+        }
+
+        return map;
+    }
     public static List<FieldPositional> createListFiel(PositionalMakeRootElem element) throws JFFPBException {
         List<FieldPositional> fdLigneRoot = new ArrayList<FieldPositional>();
         Field[] fdcp = null;
@@ -72,6 +104,30 @@ public class ControleInfo {
         // for (Field field : element.getFormatRootElem().getForClass().getDeclaredFields()) {
         for (Field field : fdcp) {
             fdLigneRoot.add(new FieldPositional(field));
+
+        }
+        return fdLigneRoot;
+    }
+    
+    
+    public static List<FieldCsv> createListFielCsv(CsvMakeRootElem element) throws JFFPBException {
+        List<FieldCsv> fdLigneRoot = new ArrayList<FieldCsv>();
+        Field[] fdcp = null;
+        int numberField = 0;
+
+        try {
+            fdcp = retroFields(element.getFormatRootElem().getForClass().newInstance(), fdcp, numberField);
+        } catch (InstantiationException e) {
+
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+
+            e.printStackTrace();
+        }
+
+        // for (Field field : element.getFormatRootElem().getForClass().getDeclaredFields()) {
+        for (Field field : fdcp) {
+            fdLigneRoot.add(new FieldCsv(field));
 
         }
         return fdLigneRoot;
@@ -96,6 +152,26 @@ public class ControleInfo {
         }
         return valable;
     }
+    public static boolean ifExpretionCsv(List<CsvMakeRootElem> CsvMakeRootElems) throws JFFPBException {
+        boolean valable = false;
+
+        for (CsvMakeRootElem element : CsvMakeRootElems) {
+
+            if (!VALUEEXPRETION.equals(element.getFormatRootElem().getExpression())) {
+
+                valable = true;
+
+            }
+            if (StringUtils.isBlank(element.getFormatRootElem().getExpression())) {
+
+                throw new JFFPBException("Toutes les annotations Expression doivent étre indiquées. Si pas d'expression alors  NOEXPRES"
+                        + " doit étre indiqué et ne peut étre utilisé qu'une seule fois.");
+
+            }
+        }
+        return valable;
+    }
+
 
     /**
      * @param forClass

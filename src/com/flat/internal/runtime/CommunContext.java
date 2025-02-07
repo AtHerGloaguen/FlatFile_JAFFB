@@ -16,13 +16,19 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 import javax.flat.bind.JFFPBException;
+import javax.flat.bind.annotation.csv.CsvFormatFile;
+import javax.flat.bind.annotation.csv.CsvMappingParseRootElem;
 import javax.flat.bind.annotation.positinal.PositionalFormatFile;
 import javax.flat.bind.annotation.positinal.PositionalMappingParseRootElem;
+import javax.flat.bind.api.CsvParseExpression;
+import javax.flat.bind.api.FieldCsv;
 import javax.flat.bind.api.FieldPositional;
 import javax.flat.bind.api.FormatFile;
 import javax.flat.bind.api.FormatRootElem;
 import javax.flat.bind.api.PositionalParseExpression;
 import javax.flat.bind.control.ControleInfo;
+import javax.flat.bind.make.CsvMakeAnnotation;
+import javax.flat.bind.make.CsvMakeRootElem;
 import javax.flat.bind.make.PositionalMakeAnnotation;
 import javax.flat.bind.make.PositionalMakeRootElem;
 
@@ -36,8 +42,9 @@ public class CommunContext {
     protected static char caractereRemplissageDefaul = ' ';
     protected Properties desactivat;
     protected static final String BR = "\r\n";
-    protected boolean carriageReturn = false;
+    protected boolean carriageReturn = true;
     protected List<PositionalMakeRootElem> positionalMakeRootElems = null;
+    protected List<CsvMakeRootElem> cvsMakeRootElems = null;
     protected FormatFile formatFile;
     protected Class<?> clazz;
     protected Object object;
@@ -45,6 +52,8 @@ public class CommunContext {
     protected static final String UNPARSING = "unmarshal";
     protected static final String NOEXPRES = PositionalMappingParseRootElem.NOEXPRES;
     protected Map<Object, PositionalParseExpression> expressioninject;
+    protected Map<Object, CsvParseExpression> expressioninjectCsv;
+
 
     public static final Comparator<FieldPositional> COMPARATEUR_RANG_FIELD = new Comparator<FieldPositional>() {
 
@@ -115,6 +124,43 @@ public class CommunContext {
 
         controlPositionalMakeRootElems();
     }
+    
+    
+    protected void initVarCsv() throws JFFPBException {
+
+        if (this.desactivat == null) {
+            this.desactivat = new Properties();
+        }
+        formatFileInfoClassCsv(this.clazz);
+        Field[] entTab = getNewInstanceType(this.clazz).getClass().getDeclaredFields();
+
+        if (entTab.length < 1) {
+            throw new JFFPBException("annotation PositionnalFormatRootElement manquante !");
+        }
+
+        this.cvsMakeRootElems = new ArrayList<CsvMakeRootElem>(entTab.length);
+
+        for (Field ent : entTab) {
+
+            CsvMappingParseRootElem inti = CsvMakeAnnotation.getFieldCsvMappingParseRootElem(ent);
+            if (inti != null) {
+                FormatRootElem format = CsvMakeAnnotation.formatInfoClassRootElem(inti);
+                CsvMakeRootElem makeRootElem = new CsvMakeRootElem(ent, format);
+                this.cvsMakeRootElems.add(makeRootElem);
+            }
+        }
+
+        Collections.sort(this.cvsMakeRootElems, new Comparator<Object>() {
+
+            public int compare(Object o1, Object o2) {
+                Integer pO1 = ((CsvMakeRootElem) o1).getFormatRootElem().getStartRowsIterationLigne();
+                Integer pO2 = ((CsvMakeRootElem) o2).getFormatRootElem().getStartRowsIterationLigne();
+                return pO1.compareTo(pO2);
+            }
+        });
+
+        controlCsvMakeRootElems();
+    }
 
     private void formatFileInfoClass(Class<?> clazz) throws JFFPBException {
 
@@ -124,6 +170,20 @@ public class CommunContext {
         }
         this.formatFile = new FormatFile();
         this.formatFile.setName(data.name());
+
+    }
+    
+    private void formatFileInfoClassCsv(Class<?> clazz) throws JFFPBException {
+
+        CsvFormatFile data = CsvMakeAnnotation.getCsvFormatFile(clazz);
+        if (data == null) {
+            throw new JFFPBException("annotation CsvFormatFile manquante !");
+        }
+        this.formatFile = new FormatFile();
+        this.formatFile.setName(data.name());
+        this.formatFile.setCharSeparateur(new String(""+data.charSeparateur()));
+        
+        
 
     }
 
@@ -157,6 +217,43 @@ public class CommunContext {
         } else {
 
             if (ControleInfo.controleDebutLigne(this.positionalMakeRootElems)) {
+
+                throw new JFFPBException("il ne peut y avoir de debut de ligne identique !  ");
+            }
+        }
+
+    }
+    
+    private void controlCsvMakeRootElems() throws JFFPBException {
+        //
+
+        // parcours de root element pour determiner l'expression
+
+        if (ControleInfo.ifExpretionCsv(this.cvsMakeRootElems)) {
+
+            for (CsvMakeRootElem element : this.cvsMakeRootElems) {
+                List<FieldCsv> fdLigneRoot = ControleInfo.createListFielCsv(element);
+
+                Map<String, Method> map = ControleInfo.creatMapClefMethodeCsv(element);
+
+                if (this.expressioninjectCsv == null) {
+                    this.expressioninjectCsv = new HashMap<Object, CsvParseExpression>();
+                }
+                Pattern patern = Pattern.compile(element.getFormatRootElem().getExpression());
+
+                if (element.getFormatRootElem().isIslist()) {
+
+                    this.expressioninjectCsv.put(patern, new CsvParseExpression(getNewInstanceList(), fdLigneRoot, map, element));
+                } else {
+                    this.expressioninjectCsv.put(patern,
+                            new CsvParseExpression(getNewInstanceType(element.getFormatRootElem().getForClass()), fdLigneRoot, map, element));
+
+                }
+            }
+
+        } else {
+
+            if (ControleInfo.controleDebutLigneCsv(this.cvsMakeRootElems)) {
 
                 throw new JFFPBException("il ne peut y avoir de debut de ligne identique !  ");
             }

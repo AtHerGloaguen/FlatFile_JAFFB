@@ -46,8 +46,17 @@ public class FormatFile {
         this.header = header;
     }
 
-    private String name;
+    public String getCharSeparateur() {
+		return charSeparateur;
+	}
+
+	public void setCharSeparateur(String charSeparateur) {
+		this.charSeparateur = charSeparateur;
+	}
+
+	private String name;
     private boolean header = false;
+    private String charSeparateur = "" ; 
 
     @Override
     public String toString() {
