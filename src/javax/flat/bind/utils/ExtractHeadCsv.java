@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.flat.bind.JFFPBException;
 import javax.flat.bind.api.FieldCsv;
@@ -73,6 +75,45 @@ public class ExtractHeadCsv {
      * @return String contenant les noms des champs sous forme d'en-tête CSV
      * @throws JFFPBException 
      */
+    public static String[] extractNameFromClass(Class<?> targetClass) throws JFFPBException {
+    	
+    	Map<Integer, Field> csvFieldMap = new HashMap<>();
+    	// Extraction des champs de la classe parente (si existante)
+        Field[] parentClassFields = targetClass.getSuperclass().getDeclaredFields();
+        int ordreField = 0 ;
+        for (Field field : parentClassFields) {
+           
+                csvFieldMap.put(ordreField++, field);
+          
+        }
+
+        // Extraction des champs de la classe actuelle
+        Field[] currentClassFields = targetClass.getDeclaredFields();
+        for (Field field : currentClassFields) {
+                csvFieldMap.put(ordreField++, field);
+         }
+    	
+        Set<Integer> set = csvFieldMap.keySet() ;
+        
+        String[] tables = new String[set.size()] ;
+        
+    	for (Integer integer : set) {
+    		tables[integer] = csvFieldMap.get(integer).getName() ;
+		}
+    	
+		return tables ;
+    	
+    	
+    	
+    	
+    }
+    
+    /**
+     * Extrait les champs de la classe et génère une chaîne d'en-têtes au format CSV.
+     * 
+     * @return String contenant les noms des champs sous forme d'en-tête CSV
+     * @throws JFFPBException 
+     */
     private String extractFieldsAsHeader() throws JFFPBException {
     	
     	
@@ -111,6 +152,8 @@ public class ExtractHeadCsv {
             // Ajoute le nom du champ au buffer, précédé du séparateur
             headerBuffer.append(this.columnSeparator).append(fieldCsv.getField().getName());
         }
+        
+        
 
         // Supprime le premier séparateur inutile
         return headerBuffer.toString().replaceFirst(this.columnSeparator, "");
